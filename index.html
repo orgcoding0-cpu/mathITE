@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Budget Optimization – Model Solution</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--ink:#1a1a2e;--ink-l:#3d3d5c;--rule:#c8c0b0;--acc:#8b0000;--acc2:#1a5276;--bg:#faf8f4;--paper:#fffef9;--yel:#f5e6c8;--gl:#e8f5e9;--gd:#1b5e20;--bl:#e3f2fd;--bd:#0d47a1;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;padding:30px 16px;}
+.page{max-width:820px;margin:0 auto;background:var(--paper);box-shadow:0 4px 40px rgba(26,26,46,.10);border-top:5px solid var(--acc);padding:56px 68px 68px;position:relative;}
+.page::before{content:'';position:absolute;top:0;left:60px;height:100%;width:1px;background:rgba(200,192,176,.35);pointer-events:none;}
+.tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--acc);text-transform:uppercase;font-weight:600;margin-bottom:8px;}
+h1{font-family:'Libre Baskerville',serif;font-size:25px;font-weight:700;line-height:1.3;margin-bottom:5px;}
+.sub{font-size:15px;color:var(--ink-l);font-style:italic;}
+.meta{display:flex;gap:28px;margin-top:14px;flex-wrap:wrap;}
+.meta span{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-l);}
+.meta span b{color:var(--acc);}
+.dhead{border-bottom:2px solid var(--rule);padding-bottom:22px;margin-bottom:32px;}
+.sec{margin-bottom:38px;}
+.slabel{display:flex;align-items:center;gap:13px;margin-bottom:16px;}
+.snum{width:34px;height:34px;border-radius:50%;background:var(--acc);color:#fff;font-family:'Libre Baskerville',serif;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.snumg{background:var(--ink);}
+.snums{background:#c77d00;}
+.stitle{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700;}
+.mbadge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--acc);background:#fff0f0;border:1px solid #f5c6c6;border-radius:20px;padding:2px 10px;white-space:nowrap;}
+p{margin-bottom:11px;}
+.mb{background:var(--yel);border-left:3px solid var(--acc2);border-radius:0 6px 6px 0;padding:14px 18px;margin:14px 0;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:2.0;color:var(--ink);}
+.mb .eql{font-family:'Crimson Pro',serif;font-size:13px;color:var(--ink-l);font-style:italic;margin-bottom:3px;font-weight:300;}
+.step{display:flex;gap:11px;align-items:flex-start;margin-bottom:13px;}
+.sn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--acc);font-weight:600;background:#fff0f0;border:1px solid #f5c6c6;border-radius:4px;padding:2px 7px;margin-top:3px;flex-shrink:0;white-space:nowrap;}
+.rb{background:var(--gl);border:1.5px solid #a5d6a7;border-radius:8px;padding:16px 20px;margin:18px 0;}
+.rb .rt{font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:var(--gd);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;}
+.rb .rc{font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.9;}
+.ib{background:var(--bl);border:1.5px solid #90caf9;border-radius:8px;padding:16px 20px;margin:18px 0;}
+.ib .it{font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:var(--bd);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;}
+table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:13px;margin:14px 0;}
+th{background:var(--ink);color:#fff;padding:9px 13px;text-align:left;font-weight:600;letter-spacing:.05em;}
+td{padding:9px 13px;border-bottom:1px solid var(--rule);}
+tr:nth-child(even) td{background:var(--yel);}
+hr{border:none;border-top:1px dashed var(--rule);margin:30px 0;}
+.cw{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:18px;margin:18px 0;}
+.ct{font-family:'Libre Baskerville',serif;font-size:14px;font-weight:700;text-align:center;margin-bottom:12px;}
+ul.il{list-style:none;padding:0;margin:10px 0;}
+ul.il li{padding:8px 0 8px 26px;position:relative;border-bottom:1px solid var(--rule);}
+ul.il li:last-child{border-bottom:none;}
+ul.il li::before{content:'▸';position:absolute;left:0;color:var(--acc);font-size:13px;top:10px;}
+.bonus{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;background:#fff3e0;border:1px solid #ffcc80;color:#e65100;border-radius:20px;padding:2px 10px;letter-spacing:.08em;font-weight:600;margin-bottom:10px;}
+.foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--rule);margin-top:24px;letter-spacing:.08em;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="dhead">
+  <div class="tag">Math I Calculus &nbsp;·&nbsp; Applications of Derivatives / Optimization</div>
+  <h1>Budget Optimization Using Data Server</h1>
+  <div class="sub">Model Solution — Data Server and Optimization Exercise</div>
+  <div class="meta">
+    <span>Program: <b>ITE / DSE</b></span>
+    <span>Total Marks: <b>20</b></span>
+    <span>Topic: <b>Optimization via Calculus</b></span>
+  </div>
+</div>
+
+<!-- Given -->
+<div class="sec">
+  <div class="slabel">
+    <div class="snum snumg">G</div>
+    <div class="stitle">Given Information (from Data Server)</div>
+  </div>
+  <table>
+    <tr><th>Data Field</th><th>Formula / Value</th><th>Description</th></tr>
+    <tr><td>CR<sub>A</sub>(x)</td><td>0.02 + 0.0001x</td><td>Conversion rate, Product A</td></tr>
+    <tr><td>CR<sub>B</sub>(y)</td><td>0.015 + 0.00015y</td><td>Conversion rate, Product B</td></tr>
+    <tr><td>Budget Constraint</td><td>x + y = 10,000</td><td>Total advertising budget ($)</td></tr>
+    <tr><td>Domain</td><td>x ≥ 0, y ≥ 0</td><td>Budgets for A and B ($)</td></tr>
+  </table>
+  <p style="font-size:15px;color:var(--ink-l);font-style:italic;">Conversions from each product = Budget × Conversion Rate.</p>
+</div>
+
+<hr>
+
+<!-- Task 1 -->
+<div class="sec">
+  <div class="slabel">
+    <div class="snum">1</div>
+    <div class="stitle">Total Conversions as a Function of One Variable</div>
+    <div class="mbadge">8 marks</div>
+  </div>
+
+  <p>The expected conversions from each product are the product of the advertising budget and its conversion rate:</p>
+
+  <div class="mb">
+    <div class="eql">Conversions from Product A:</div>
+    C<sub>A</sub>(x) = x · CR<sub>A</sub>(x) = x(0.02 + 0.0001x)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.02x + 0.0001x²
+  </div>
+
+  <div class="mb">
+    <div class="eql">Conversions from Product B:</div>
+    C<sub>B</sub>(y) = y · CR<sub>B</sub>(y) = y(0.015 + 0.00015y)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.015y + 0.00015y²
+  </div>
+
+  <div class="step"><div class="sn">Step 1</div><div>Apply the budget constraint: express <em>y</em> in terms of <em>x</em>.</div></div>
+  <div class="mb">x + y = 10,000 &nbsp;⟹&nbsp; <strong>y = 10,000 − x</strong></div>
+
+  <div class="step"><div class="sn">Step 2</div><div>Write T(x) = C<sub>A</sub>(x) + C<sub>B</sub>(y) and substitute y = 10,000 − x.</div></div>
+  <div class="mb">T(x) = (0.02x + 0.0001x²) + C<sub>B</sub>(10,000 − x)</div>
+
+  <div class="step"><div class="sn">Step 3</div><div>Expand C<sub>B</sub>(10,000 − x):</div></div>
+  <div class="mb">
+    = 0.015(10,000 − x) + 0.00015(10,000 − x)²<br>
+    = 150 − 0.015x + 0.00015(100,000,000 − 20,000x + x²)<br>
+    = 150 − 0.015x + 15 − 3x + 0.00015x²<br>
+    = 165 − 3.015x + 0.00015x²
+  </div>
+
+  <div class="step"><div class="sn">Step 4</div><div>Combine both terms:</div></div>
+  <div class="mb">
+    T(x) = (0.02x + 0.0001x²) + (165 − 3.015x + 0.00015x²)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= (0.0001 + 0.00015)x² + (0.02 − 3.015)x + 165<br><br>
+    <strong>T(x) = 0.00025x² − 2.995x + 165</strong> &nbsp;&nbsp;(0 ≤ x ≤ 10,000)
+  </div>
+
+  <div class="rb">
+    <div class="rt">✓ Result — Task 1</div>
+    <div class="rc">T(x) = 0.00025x² − 2.995x + 165 &nbsp;&nbsp;[total conversions]<br>Domain: 0 ≤ x ≤ 10,000 ; &nbsp;y = 10,000 − x</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- Task 2 -->
+<div class="sec">
+  <div class="slabel">
+    <div class="snum">2</div>
+    <div class="stitle">Budget Allocation that Maximizes Total Conversions</div>
+    <div class="mbadge">8 marks</div>
+  </div>
+
+  <p>We apply calculus: find the critical point via T′(x) = 0, then use the second derivative test and evaluate endpoints.</p>
+
+  <div class="step"><div class="sn">Step 1</div><div>Differentiate T(x):</div></div>
+  <div class="mb">
+    T(x) = 0.00025x² − 2.995x + 165<br>
+    T′(x) = 2(0.00025)x − 2.995<br>
+    <strong>T′(x) = 0.0005x − 2.995</strong>
+  </div>
+
+  <div class="step"><div class="sn">Step 2</div><div>Set T′(x) = 0 and solve:</div></div>
+  <div class="mb">
+    0.0005x − 2.995 = 0<br>
+    x = 2.995 ÷ 0.0005<br>
+    <strong>x* = 5,990</strong>
+  </div>
+
+  <div class="step"><div class="sn">Step 3</div><div>Second derivative test:</div></div>
+  <div class="mb">T″(x) = 0.0005 &gt; 0 &nbsp;⟹&nbsp; concave up &nbsp;⟹&nbsp; x = 5,990 is a <strong>MINIMUM</strong></div>
+
+  <div class="ib">
+    <div class="it">⚠ Key Observation</div>
+    <p>T(x) is an upward-opening parabola (positive leading coefficient 0.00025 > 0). On the closed interval [0, 10,000], the <strong>maximum must occur at an endpoint</strong>. The critical point x = 5,990 is the global minimum.</p>
+  </div>
+
+  <div class="step"><div class="sn">Step 4</div><div>Evaluate T(x) at the endpoints:</div></div>
+  <div class="mb">
+    T(0) = 0 − 0 + 165 = <strong>165.00</strong><br><br>
+    T(10,000) = 0.00025(10,000)² − 2.995(10,000) + 165<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 25,000 − 29,950 + 165 = <strong>−4,785</strong><br><br>
+    T(5,990) = 0.00025(5,990)² − 2.995(5,990) + 165 ≈ <strong>−8,795</strong> (minimum)
+  </div>
+
+  <div class="step"><div class="sn">Step 5</div><div>Compare endpoints; select the maximum:</div></div>
+  <div class="mb">T(0) = 165 &gt; T(10,000) = −4,785 &nbsp;⟹&nbsp; <strong>Maximum at x = 0</strong></div>
+
+  <div class="rb">
+    <div class="rt">✓ Result — Task 2: Optimal Budget Allocation</div>
+    <div class="rc">
+      x* = $0 &nbsp;→ Product A &nbsp;&nbsp;|&nbsp;&nbsp; y* = $10,000 &nbsp;→ Product B<br>
+      Maximum Total Conversions: &nbsp;<strong>T(0) = 165</strong>
+    </div>
+  </div>
+
+  <div class="ib">
+    <div class="it">📐 Calculus Summary</div>
+    <p>T′(x) = 0 at x = 5,990 → interior minimum (T″ > 0).<br>
+    Closed interval [0, 10,000]: compare T(0) = 165 vs T(10,000) = −4,785.<br>
+    <strong>Global maximum: x = 0, T = 165.</strong></p>
+  </div>
+</div>
+
+<hr>
+
+<!-- Task 3 -->
+<div class="sec">
+  <div class="slabel">
+    <div class="snum">3</div>
+    <div class="stitle">Data-Driven Interpretation</div>
+    <div class="mbadge">4 marks</div>
+  </div>
+
+  <p>The data server's historical conversion models shaped every step of the optimization. Here is how:</p>
+
+  <ul class="il">
+    <li><strong>Foundation for model construction:</strong> CR<sub>A</sub>(x) and CR<sub>B</sub>(y) were retrieved from the server's fitted historical records. These linear models (base rate + marginal rate × spend) are empirical — without the data server, there is no T(x) to optimize.</li>
+    <li><strong>Product B has a superior marginal conversion rate:</strong> The server reveals CR<sub>B</sub> has a marginal coefficient of 0.00015 vs. 0.0001 for CR<sub>A</sub> — each additional dollar spent on B generates 50% more incremental conversions than on A. This data difference directly drives the optimal allocation toward B.</li>
+    <li><strong>Sensitivity to data quality:</strong> The result — allocate the full $10,000 to Product B — is entirely contingent on the data server's figures. If historical data were inaccurate or outdated, the optimization output would be invalid, underscoring the importance of clean, reliable server data.</li>
+    <li><strong>Scalability with real-time data:</strong> A live data server could supply updated CR coefficients dynamically. The calculus framework remains valid; only the coefficients change. The company could re-run optimization automatically each time the server refreshes conversion metrics, enabling continuous budget reallocation.</li>
+  </ul>
+
+  <div class="rb">
+    <div class="rt">✓ Final Conclusion</div>
+    <div class="rc" style="font-family:'Crimson Pro',serif;font-size:16px;line-height:1.8;">
+      Allocate <strong>$0 to Product A</strong> and <strong>$10,000 to Product B</strong>.<br>
+      This yields the maximum total conversions: <strong>T = 165</strong>.<br>
+      The data server was indispensable — it provided the empirical conversion rate functions that made rigorous calculus-based optimization possible and actionable.
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- Bonus -->
+<div class="sec">
+  <div class="slabel">
+    <div class="snum snums">★</div>
+    <div class="stitle">Bonus: Visualization of T(x)</div>
+  </div>
+  <div class="bonus">OPTIONAL BONUS</div>
+  <p>The graph below shows T(x) = 0.00025x² − 2.995x + 165 over [0, 10,000], with the global minimum and maximum marked.</p>
+  <div class="cw">
+    <div class="ct">Total Conversions T(x) vs. Budget Allocated to Product A (x)</div>
+    <canvas id="ch" height="260"></canvas>
+  </div>
+  <p style="font-size:14px;color:var(--ink-l);font-style:italic;text-align:center;">
+    Upward parabola confirms x = 5,990 is the minimum. Maximum is at the endpoint x = 0.
+  </p>
+</div>
+
+<div class="foot">MATH I CALCULUS &nbsp;·&nbsp; OPTIMIZATION EXERCISE &nbsp;·&nbsp; MODEL SOLUTION</div>
+</div>
+
+<script>
+const xs=[], ts=[];
+for(let x=0;x<=10000;x+=250){xs.push(x);ts.push(+(0.00025*x*x-2.995*x+165).toFixed(2));}
+new Chart(document.getElementById('ch'),{
+  type:'line',
+  data:{labels:xs,datasets:[
+    {label:'T(x)',data:ts,borderColor:'#1a5276',backgroundColor:'rgba(26,82,118,0.07)',borderWidth:2.5,pointRadius:0,fill:true,tension:0.3},
+    {label:'Maximum T(0)=165',data:[{x:0,y:165}],borderColor:'#1b5e20',backgroundColor:'#1b5e20',pointRadius:9,showLine:false,type:'scatter'},
+    {label:'Minimum T(5990)≈−8795',data:[{x:5990,y:-8795}],borderColor:'#8b0000',backgroundColor:'#8b0000',pointRadius:9,showLine:false,type:'scatter'}
+  ]},
+  options:{responsive:true,plugins:{legend:{labels:{font:{family:'serif',size:13},color:'#1a1a2e'}}},
+    scales:{
+      x:{type:'linear',title:{display:true,text:'x = Budget to Product A ($)',font:{size:13},color:'#1a1a2e'},
+         ticks:{callback:v=>'$'+v.toLocaleString(),font:{size:10}},grid:{color:'rgba(200,192,176,0.35)'}},
+      y:{title:{display:true,text:'Total Conversions T(x)',font:{size:13},color:'#1a1a2e'},
+         ticks:{font:{size:10}},grid:{color:'rgba(200,192,176,0.35)'}}
+    }}
+});
+</script>
+</body>
+</html>
